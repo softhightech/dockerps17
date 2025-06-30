@@ -1,77 +1,17 @@
 version: "3.7"
+
 services:
   prestashop:
-    image: prestashop/prestashop
-    networks:
-      myprestashop:
+    image: prestashop/prestashop:1.7
+    restart: always
     ports:
-      - 8181:80
-    links:
-      - mariadb:mariadb
-    depends_on:
-      - mariadb
-    # volumes:
-      # IT WORKS - 
-      # - ./srv:/var/www/html
-      # - ./srv/install:/var/www/html/install
-
-
-      # - ./srv/modules:/var/www/html/modules
-      # - ./srv/themes:/var/www/html/themes
-      # - ./srv/override:/var/www/html/override
-      # - ./srv/admin:/var/www/html/admin
+      - "80:80"
     environment:
-      - PS_DEV_MODE=1
-      - DB_SERVER=mariadb
-      - DB_USER=root
-      - DB_PASSWD=mycustompassword
-      - DB_NAME=prestashop
+      - PS_DEV_MODE=${PS_DEV_MODE}
+      - DB_SERVER=${DB_SERVER}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWD=${DB_PASSWD}
       - PS_INSTALL_AUTO=0
-
-  mariadb:
-    image: mariadb
-    networks:
-      myprestashop:
-    # volumes:
-      # - ./db:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=mycustompassword
-      - MYSQL_DATABASE=prestashop
-
-  # phpmyadmin:
-  #   image: phpmyadmin/phpmyadmin
-  #   networks:
-  #     myprestashop:
-  #   links:
-  #     - mariadb:mariadb
-  #   ports:
-  #     - 1235:80
-  #   depends_on:
-  #     - mariadb
-  #   environment:
-  #     - PMA_HOST=mariadb
-  #     - PMA_USER=root
-  #     - PMA_PASSWORD=mycustompassword
-  # filebrowser:
-  #   image: filebrowser/filebrowser:s6
-  #   container_name: filebrowser
-  #   volumes:
-  #     - ./srv:/srv
-  #     - ./filebrowser/filebrowser.db:/filebrowser/database/filebrowser.db
-  #     # - ./filebrowser/filebrowser.db:/database/filebrowser.db
-  #     # Optional if you want persistent settings:
-  #     # - ./filebrowser/filebrowser.db:/filebrowser/database/filebrowser.db
-  #     # - ./filebrowser/settings.json:/config/settings.json
-  #   environment:
-  #     - PUID=$(id -u)
-  #     - PGID=$(id -g)
-  #   ports:
-  #     - 8095:80
-  #   restart: unless-stopped
-  #   networks:
-  #     - myprestashop
-networks:
-  myprestashop:
-    # external: true
-    
-# Original: https://stackoverflow.com/a/62088287
+    volumes:
+      - ./srv:/var/www/html
